@@ -1,0 +1,12 @@
+{
+  "name": "cetra",
+  "displayName": "cetra",
+  "description": "Add cetra LLM tracing to an app with the Python or TypeScript SDK or OpenTelemetry, and check that traces arrive.",
+  "author": { "name": "cetra" },
+  "homepage": "https://cetra.sh",
+  "repository": "https://github.com/cetra-ai/skills",
+  "license": "MIT",
+  "category": "developer-tools",
+  "keywords": ["observability", "tracing", "opentelemetry", "llm"],
+  "skills": "./skills/"
+}

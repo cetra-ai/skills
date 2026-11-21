@@ -1,0 +1,12 @@
+{
+  "name": "cetra",
+  "description": "The cetra agent skill.",
+  "owner": { "name": "cetra" },
+  "plugins": [
+    {
+      "name": "cetra",
+      "source": "./",
+      "description": "Add cetra LLM tracing to an app and check that traces arrive."
+    }
+  ]
+}
