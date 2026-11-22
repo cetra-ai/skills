@@ -77,3 +77,7 @@ An explicit argument wins over the environment variable, which wins over the def
 ## What is never logged
 
 The SDK's own logs and errors never contain payload content (prompts, completions, attribute values), secrets, API keys or email addresses. Log lines carry ids, sizes, counts and exception type names only; configuration errors name the option, never its value; the API key is excluded from `repr` and serialization of the config. Messages go to the `cetra` logger, which has no handlers by default: configure the standard `logging` module to see them. The missing-key and second-`init()` warnings appear once per process; a full score buffer warns at most once per minute, and rejected or failed score batches are logged as they happen.
+
+## User agent
+
+Every request the SDK sends carries `User-Agent: cetra-sdk-python/<version>`: score writes, prompt fetches and `Client` calls. The trace exporter keeps the OpenTelemetry exporter's own value and adds the SDK's after it (`OTel-OTLP-Exporter-Python/<otel version> cetra-sdk-python/<version>`). Nothing else goes into it. A firewall or proxy in front of cetra can allow these values.

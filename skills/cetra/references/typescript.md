@@ -54,3 +54,7 @@ An explicit argument wins over the env var, which wins over the default. Env val
 ## What is never logged
 
 Logs and warnings never contain payloads (prompts, completions, attribute values), API keys or email addresses: ids, sizes and counts only. An invalid score logs `cetra: score not queued: <reason>` with the reason, never the value. The API key never appears in errors or serialized config.
+
+## User agent
+
+Every request the SDK sends carries `User-Agent: cetra-sdk-js/<version>`: trace exports, score writes, prompt fetches and `Client` calls. Nothing else goes into it. A firewall or proxy in front of cetra can allow this value. The browser `feedback()` helper sends the browser's own user agent.
