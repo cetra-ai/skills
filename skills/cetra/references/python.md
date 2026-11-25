@@ -36,8 +36,22 @@ Auto-instrumentation is optional, one extra per library:
 | `openai-agents` | `cetra-sdk[openai-agents]` |
 | `crewai` | `cetra-sdk[crewai]` |
 | `dspy` | `cetra-sdk[dspy]` |
+| `groq` | `cetra-sdk[groq]` |
+| `mistralai` | `cetra-sdk[mistralai]` |
+| `cohere` | `cetra-sdk[cohere]` |
+| `ollama` | `cetra-sdk[ollama]` |
+| `together` | `cetra-sdk[together]` |
+| `instructor` | `cetra-sdk[instructor]` |
+| `agno` | `cetra-sdk[agno]` |
+| `smolagents` | `cetra-sdk[smolagents]` |
+| `haystack` | `cetra-sdk[haystack]` |
+| `beeai` | `cetra-sdk[beeai]` |
+| `mcp` | `cetra-sdk[mcp]` |
+| `autogen-agentchat` | `pip install openinference-instrumentation-autogen-agentchat` |
 
-`cetra-sdk[all]` installs every instrumentor. The core package pulls in only `opentelemetry-api`, `opentelemetry-sdk`, `opentelemetry-exporter-otlp-proto-http` and `requests`.
+The `instructor` and `beeai` distributions do not support every Python version: the `instructor` extra installs on Python 3.13 or earlier, and `beeai` on Python 3.14 or earlier.
+
+`cetra-sdk[all]` installs every instrumentor that has an extra. The core package pulls in only `opentelemetry-api`, `opentelemetry-sdk`, `opentelemetry-exporter-otlp-proto-http` and `requests`.
 
 ## Initialize
 

@@ -6,6 +6,8 @@ Trace LiteLLM calls with cetra from Python, with the OpenInference LiteLLM instr
 
 cetra can trace LiteLLM calls from Python through the OpenInference LiteLLM instrumentation.
 
+Running the LiteLLM Proxy instead? See [LiteLLM Proxy](https://cetra.sh/docs/integrations/litellm-proxy/).
+
 ## Install
 
 ```bash

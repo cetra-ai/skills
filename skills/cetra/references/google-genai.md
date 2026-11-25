@@ -4,7 +4,7 @@
 
 Trace Google Gen AI calls with cetra: Gemini generateContent, streaming, multimodal input and reasoning tokens, from Python.
 
-cetra traces calls to Gemini through the Google Gen AI SDK, including streamed answers, images in the input and reasoning tokens.
+cetra traces calls to Gemini through the Google Gen AI SDK, including streamed answers, images in the input and reasoning tokens. For Vertex AI, see [Vertex AI](https://cetra.sh/docs/integrations/vertex-ai/).
 
 ## Install
 

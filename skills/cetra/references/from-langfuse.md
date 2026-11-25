@@ -38,7 +38,7 @@ The fixtures show the Langfuse SDK 5.1.0 producing these, and cetra reading them
 - The input and output of decorated functions, and the messages of the OpenAI drop-in.
 - Session ID, user ID and tags, set at trace level, become the cetra session, user and tags. Trace metadata becomes metadata.
 - The model, model parameters and `usage_details`, including cached and reasoning tokens.
-- A reported cost (`cost_details`) is kept as the reported cost, and cetra does not replace it with a computed one.
+- A reported cost (`cost_details`) is kept as the reported cost, and cetra does not replace it with a computed one, except a total of exactly 0 on a span that has tokens, which is priced from the price table (see [Cost and tokens](https://cetra.sh/docs/tracing/cost-and-tokens/)).
 - `completion_start_time` gives the time to first token.
 - An observation with level `ERROR` has the status `error`.
 

@@ -1,10 +1,10 @@
 <!-- Generated from website/src/content/docs/docs/integrations/langchain.mdx by website/scripts/skill-references.mjs. Do not edit: run `just docs-gen`. -->
 
-# LangChain and LangGraph
+# LangChain
 
-Trace LangChain and LangGraph with cetra: chains, chat models, tools and agent steps, from Python and TypeScript.
+Trace LangChain chains, agents, models and tools with cetra from Python and TypeScript, through the OpenInference LangChain instrumentation.
 
-cetra traces LangChain and LangGraph runs as a tree: the graph, its nodes, each model call and each tool call.
+cetra traces LangChain and LangGraph runs as a tree: the graph, its nodes, each model call and each tool call. For LangGraph graphs and Deep Agents, see [LangGraph](https://cetra.sh/docs/integrations/langgraph/) and [Deep Agents](https://cetra.sh/docs/integrations/deepagents/).
 
 ## Install
 
@@ -62,6 +62,10 @@ await model.invoke("What is the weather in Paris?");
 - A LangGraph agent is a tree: the graph, each node as a `chain` span, the model calls and the tool calls under their nodes.
 - LangChain's run metadata, such as `langgraph_node` and `langgraph_step`, is kept as span metadata.
 - Cost is computed from the token counts of each model call.
+
+## LangServe
+
+LangServe serves LangChain runnables over HTTP and has no spans of its own. Instrument the app's LangChain code as this page shows, and add an OpenTelemetry FastAPI instrumentor for the HTTP layer if you want HTTP spans.
 
 ## Limits
 

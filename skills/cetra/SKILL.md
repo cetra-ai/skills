@@ -92,4 +92,4 @@ Tell the user which files changed, which libraries are traced, and where to see 
 - The whole documentation for agents: `https://cetra.sh/llms.txt`.
 - Search the docs with the docs MCP server at `https://cetra.sh/mcp`.
 - Span attributes cetra reads, for hand-made spans: [attributes.md](references/attributes.md) and [metadata-and-tags.md](references/metadata-and-tags.md).
-- Tracing the coding agent itself (Claude Code, Codex, Gemini CLI, Copilot) is a different setup, `cetra agents setup`: see [Claude Code](https://cetra.sh/docs/integrations/claude-code/).
+- Tracing the coding agent itself (Claude Code, Codex, Gemini CLI, Copilot, Qwen Code, Pi, OpenClaw, OpenCode, Goose, Oh My Pi) is a different setup, `cetra agents setup`: see [Claude Code](https://cetra.sh/docs/integrations/claude-code/).

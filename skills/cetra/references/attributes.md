@@ -59,7 +59,7 @@ When a span carries no cetra attribute for a field, cetra reads the field from t
 
 | Attribute | Feeds |
 |---|---|
-| `gen_ai.operation.name` | Span kind and the operation |
+| `gen_ai.operation.name` | Span kind and the operation; `embeddings`, `embedding` and `aembedding` are embedding operations; `tts` and `stt` (Pipecat's speech operations) are plain `span`s |
 | `gen_ai.provider.name`, `gen_ai.system` | Provider |
 | `gen_ai.request.model` | Request model |
 | `gen_ai.response.model` | Response model |
@@ -73,9 +73,32 @@ When a span carries no cetra attribute for a field, cetra reads the field from t
 | `gen_ai.usage.input_tokens`, `gen_ai.usage.output_tokens`, `gen_ai.usage.total_tokens` | Token counts |
 | `gen_ai.usage.cache_read.input_tokens`, `gen_ai.usage.cache_creation.input_tokens` | Cache token counts |
 | `gen_ai.usage.reasoning.output_tokens` | Reasoning token count |
-| `gen_ai.usage.cost`, `gen_ai.usage.total_cost`, `gen_ai.usage.input_cost`, `gen_ai.usage.output_cost` | Reported cost |
+| `gen_ai.usage.cost`, `gen_ai.usage.total_cost`, `gen_ai.usage.input_cost`, `gen_ai.usage.output_cost`, `gen_ai.cost.total_cost`, `gen_ai.cost.input_cost`, `gen_ai.cost.output_cost` | Reported cost |
+| `bifrost.cost.input`, `bifrost.cost.output` | Reported cost parts, on Bifrost gateway spans |
 | `gen_ai.response.time_to_first_chunk` | Time to first token |
 | `gen_ai.conversation.id` | Session |
+
+### Endpoint
+
+| Attribute | Feeds |
+|---|---|
+| `server.address`, `url.full`, `gen_ai.openai.api_base` | Provider, when the provider is missing or `openai` on an `llm` or `embedding` span. The host names the provider, for example `openrouter.ai` gives `openrouter`. |
+
+### VoltAgent
+
+Read on spans that VoltAgent writes: spans with a `voltagent.*` attribute, or whose instrumentation scope starts with `@voltagent/`.
+
+| Attribute | Feeds |
+|---|---|
+| `span.type` | Span kind: `llm` and `tool` |
+| `entity.type` | Span kind `agent`, when `span.type` is missing |
+| `llm.model`, `ai.model.name` | Request model, after `gen_ai.request.model` |
+| `llm.usage.prompt_tokens`, `llm.usage.completion_tokens` | Input and output token counts, on `llm` spans |
+| `llm.usage.cached_tokens` | Cache read token count, on `llm` spans |
+| `llm.usage.reasoning_tokens` | Reasoning token count, on `llm` spans |
+| `llm.messages` | Input messages, on `llm` spans (AI SDK messages) |
+| `input`, `output` | Input, when `llm.messages` does not supply it, and output |
+| `conversation.id`, `voltagent.conversation_id` | Session |
 
 ### OpenInference
 
@@ -103,6 +126,7 @@ When a span carries no cetra attribute for a field, cetra reads the field from t
 |---|---|
 | `traceloop.span.kind` | Span kind |
 | `llm.request.type` | Span kind |
+| span name, on the vector scopes | Span kind `retriever` for the read names, on the scopes `opentelemetry.instrumentation.chromadb`, `.qdrant`, `.milvus`, `.pinecone` and `.weaviate`: `chroma.query`, `chroma.get`, `qdrant.query_points`, `qdrant.search`, `qdrant.scroll`, `milvus.search`, `milvus.query`, `milvus.get`, `pinecone.query`, `pinecone.fetch`, and Weaviate names starting `db.weaviate.collections.query.` or `db.weaviate.gql.query.`. Every other name on them gives `span` |
 | `gen_ai.prompt.N.*` | Input messages |
 | `gen_ai.completion.N.*` | Output messages |
 | `traceloop.entity.input`, `traceloop.entity.output` | Input and output when there are no messages |
@@ -168,6 +192,77 @@ When a span carries no cetra attribute for a field, cetra reads the field from t
 | `gcp.vertex.agent.llm_response` | Output message, finish reason and token counts |
 | `gcp.vertex.agent.tool_call_args`, `gcp.vertex.agent.tool_response` | Input and output of a tool span |
 | `gcp.vertex.agent.session_id` | Session |
+
+### Prompt Flow
+
+Read on spans of scope `promptflow`, which Prompt Flow writes.
+
+| Attribute | Feeds |
+|---|---|
+| `span_type` | Span kind: `LLM` gives `llm`, `Embedding` gives `embedding`, `Retrieval` gives `retriever`, `Flow` and `LangChain` give `chain`, and `Function` gives `span` |
+| `inputs` | Input. On an `llm` span, the messages of the OpenAI request when it has them. The `model` field of the JSON gives the request model on an `llm` or `embedding` span |
+| `output` | Output. On an `llm` span, the message of the OpenAI response when it has one |
+| `llm.response.model` | Response model, on an `llm` or `embedding` span |
+| `llm.usage.prompt_tokens`, `llm.usage.completion_tokens`, `llm.usage.total_tokens` | Token counts, on an `llm` span |
+
+### Langflow
+
+Read on spans of scope `langflow`, which Langflow writes through Traceloop.
+
+| Attribute | Feeds |
+|---|---|
+| `trace_type` | Span kind: `agent`, `tool`, `retriever` and `embedding` keep their kind, and any other value gives `chain` |
+| `flow_id` | Span kind `chain`, when `trace_type` is missing (the flow's root span) |
+| `inputs` | Input, as JSON text |
+| `outputs` | Output, as JSON text |
+
+### n8n
+
+Read on spans of scope `n8n-workflow`. n8n keeps every node span's name as `node.execute`.
+
+| Attribute | Feeds |
+|---|---|
+| span name `workflow.execute` | Span kind `chain` |
+| span name `node.execute` | Span kind `span`, unless `gen_ai.operation.name` is set. Then the GenAI operation decides the kind |
+
+### LiveKit Agents
+
+Read on spans of scope `livekit-agents`. The `lk.pii.*` keys are present only when LiveKit keeps the content, which is the default.
+
+| Attribute | Feeds |
+|---|---|
+| `lk.pii.user_input`, `lk.pii.chat_ctx`, `lk.pii.function_tool.arguments` | Input, in that order, when no GenAI key gives one |
+| `lk.pii.response.text`, `lk.pii.function_tool.output` | Output, in that order, when no GenAI key gives one |
+| `gen_ai.provider.name` | Provider, on any span. A host in this key is an endpoint: `api.openai.com` gives `openai`, another host that cetra maps gives its provider, and an unmapped host gives no provider |
+
+### Pipecat
+
+Read on spans of scopes starting with `pipecat`.
+
+| Attribute | Feeds |
+|---|---|
+| `input` | Input. An OpenAI-shaped message list is read as messages. Any other value is kept as text |
+| `output` | Output, as text |
+| `conversation.id` | Session, on spans of scope `pipecat.turn` (the `conversation` and `turn` spans) |
+
+### OpenLIT
+
+Read on spans of scopes starting with `openlit.instrumentation.`, which OpenLIT writes.
+
+| Attribute | Feeds |
+|---|---|
+| `gen_ai.operation.type` | Span kind, when `gen_ai.operation.name` is not a standard operation: `invoke_agent` gives `agent`, and `execute_task` gives `chain` |
+| `db.operation.name` | Span kind on a vector span (`gen_ai.operation.name` `vectordb`): `get`, `query` or `search`, lowercased, gives `retriever`; any other value, and a missing key, give `span`. The key is peeked, not consumed |
+
+The provider `browser_use`, which OpenLIT writes for Browser Use, is a framework name. cetra never reads it as a provider.
+
+### Promptfoo
+
+Read on spans of scope `promptfoo.providers`. Promptfoo's request and response bodies are not read.
+
+| Attribute | Feeds |
+|---|---|
+| `gen_ai.evaluation.name` | Span kind `evaluator`, on a grader span |
 
 ### Resource attributes
 
