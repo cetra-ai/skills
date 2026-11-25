@@ -72,6 +72,15 @@ Select **Columns** to show, hide or reorder them. The list has the same facets, 
 
 Open a session to read it as a transcript. cetra rebuilds the conversation from the input and output of each trace's root span, in order. Select a turn to open its trace. Session scores sit at the top, and **Annotate** adds your own.
 
+Each turn shows the calls made in it, and the page helps you search and move through the turns:
+
+- Tool, retriever and guardrail calls appear as chips under the turn. A failed call is red and shows its error message.
+- Select the chevron beside a turn to list its model, tool, retriever and guardrail calls in order, each with one line of its input preview. Select a call to open it in the trace.
+- Search the turns by name or text, and filter them with the **Failed**, **Scored** and **Uses tools** chips.
+- Switch to **Compact** to show one line per turn.
+- The strip above the transcript shows one cell per turn, sized by duration and colored by status. Select a cell to jump to its turn.
+- Press `j` and `k`, or the arrow keys, to move between turns. The errors chip in the header selects the next failed turn, then starts again from the first.
+
 A session takes its user from the first trace that has one, and its tags are the tags of all its traces together.
 
 ## Filter sessions
