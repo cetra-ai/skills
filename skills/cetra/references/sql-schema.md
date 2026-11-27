@@ -196,15 +196,73 @@ Live items of each dataset at its current version.
 
 | Function | Description |
 |---|---|
-| `now() -> timestamp` | Current time. |
 | `lower(value: string) -> string` | Lowercase a string. |
 | `upper(value: string) -> string` | Uppercase a string. |
-| `length(value: string) -> integer` | Number of characters. |
-| `coalesce(value: any, fallback: any) -> any` | First non-null argument. |
-| `array_has(array: string_list, value: string) -> boolean` | Whether the list contains the value. |
-| `array_length(array: string_list) -> integer` | Number of elements. |
+| `length(value: string) -> integer` | Number of UTF-8 characters. |
+| `substr(value: string, start: integer [, count: integer]) -> string` | Extract a substring (1-based start). |
+| `trim(value: string [, chars: string]) -> string` | Trim leading and trailing characters. |
+| `ltrim(value: string [, chars: string]) -> string` | Trim leading characters. |
+| `rtrim(value: string [, chars: string]) -> string` | Trim trailing characters. |
+| `left(value: string, n: integer) -> string` | First n characters of a string. |
+| `right(value: string, n: integer) -> string` | Last n characters of a string. |
+| `split_part(value: string, delimiter: string, part: integer) -> string` | Split a string and return the 1-based part. |
+| `concat(value: any, ...) -> string` | Concatenate values as a string. |
+| `concat_ws(separator: string, value: any, ...) -> string` | Concatenate non-null values with a separator. |
+| `starts_with(value: string, prefix: string) -> boolean` | Whether value starts with prefix. |
+| `ends_with(value: string, suffix: string) -> boolean` | Whether value ends with suffix. |
+| `contains(value: string, substring: string) -> boolean` | Whether value contains substring. |
+| `strpos(value: string, substring: string) -> integer` | 1-based position of substring, or 0 if absent. |
+| `regexp_like(value: string, pattern: string [, flags: string]) -> boolean` | Whether value matches a regular expression. |
+| `regexp_extract(value: string, pattern: string [, flags: string]) -> string` | Extract the first match or capture group. |
+| `encode(value: binary \| string, encoding: string) -> string` | Encode bytes using hex or base64. |
+| `now() -> timestamp` | Current query timestamp. |
 | `date_trunc(unit: string, time: timestamp) -> timestamp` | Truncate a timestamp to a unit such as day or hour. |
-| `abs(value: float) -> float` | Absolute value. |
+| `date_bin(stride: interval, time: timestamp [, origin: timestamp]) -> timestamp` | Bin a timestamp to fixed stride boundaries. |
+| `extract(field: string, value: timestamp \| date \| interval) -> integer \| float` | Extract a calendar field from a timestamp, date, or interval. |
+| `to_timestamp(value: integer \| float \| string \| timestamp) -> timestamp` | Convert epoch seconds or string to a UTC timestamp. |
+| `abs(value: number) -> number` | Absolute value. |
+| `round(value: number [, digits: integer]) -> number` | Round a number to digits decimal places. |
+| `floor(value: number) -> number` | Largest integer not greater than value. |
+| `ceil(value: number) -> number` | Smallest integer not less than value. |
+| `sqrt(value: float) -> float` | Square root. |
+| `ln(value: float) -> float` | Natural logarithm. |
+| `log10(value: float) -> float` | Base-10 logarithm. |
+| `power(base: float, exponent: float) -> float` | Raise base to exponent. |
+| `coalesce(value: any, fallback: any, ...) -> any` | First non-null argument. |
+| `nullif(a: any, b: any) -> any` | Return null when a equals b, else a. |
+| `greatest(value: any, ...) -> any` | Largest non-null argument. |
+| `least(value: any, ...) -> any` | Smallest non-null argument. |
+| `isnan(value: float) -> boolean` | Whether value is IEEE NaN. |
+| `isfinite(value: float) -> boolean` | Whether value is finite (not NaN or infinite). |
+| `array_has(array: list, value: any) -> boolean` | Whether the list contains the value. |
+| `array_has_all(array: list, subset: list) -> boolean` | Whether array contains every element of subset. |
+| `array_length(array: list [, dim: integer]) -> integer` | Number of elements. |
+| `array_element(array: list, index: integer) -> any` | 1-based element of a list. |
+| `array_to_string(array: list, delimiter: string [, null_str: string]) -> string` | Join list elements into a string. |
+| `array_distinct(array: list) -> list` | Remove duplicate elements from a list. |
+| `map_keys(map: string_map) -> string_list` | Sorted keys of a string map. |
+| `map_values(map: string_map) -> string_list` | Values of a string map in key order. |
+| `json_get(json: string, key: string \| integer) -> string` | Get JSON object field or array element as JSON text. |
+| `json_get_text(json: string, key: string \| integer) -> string` | Get JSON object field or array element as unquoted text. |
+| `json_extract(json: string, path: string) -> string` | Extract JSONPath value as JSON text. |
+| `json_extract_text(json: string, path: string) -> string` | Extract JSONPath value as unquoted text. |
+| `count([DISTINCT] value: any \| *) -> integer` | Count rows or non-null values. |
+| `sum(value: number) -> number` | Sum of non-null values. |
+| `avg(value: number) -> float \| decimal` | Arithmetic mean of non-null values. |
+| `min(value: any) -> any` | Minimum non-null value. |
+| `max(value: any) -> any` | Maximum non-null value. |
+| `approx_percentile_cont(value: number, quantile: float) -> float` | Approximate continuous percentile via DDSketch. |
+| `percentile_cont(quantile: float) WITHIN GROUP (ORDER BY value) -> float` | Exact interpolated continuous percentile. |
+| `bool_or(value: boolean) -> boolean` | True if any non-null value is true. |
+| `bool_and(value: boolean) -> boolean` | True if all non-null values are true. |
+| `array_agg([DISTINCT] value: any) -> list` | Collect non-null values into a list. |
+| `row_number() OVER (...) -> integer` | Sequential 1-based row number within each partition. |
+| `rank() OVER (...) -> integer` | 1-based rank with gaps for ties. |
+| `dense_rank() OVER (...) -> integer` | 1-based rank without gaps for ties. |
+| `lag(value: any [, offset: integer [, default: any]]) OVER (...) -> any` | Value from a preceding row in the partition. |
+| `lead(value: any [, offset: integer [, default: any]]) OVER (...) -> any` | Value from a following row in the partition. |
+| `first_value(value: any) OVER (...) -> any` | Value at the first row of the window frame. |
+| `last_value(value: any) OVER (...) -> any` | Value at the last row of the window frame. |
 | `score(name: string) -> float` | Latest numeric score of that name on the row's target. |
 | `score_label(name: string) -> string` | Latest categorical or text score of that name. |
 | `has_score(name: string) -> boolean` | Whether the row's target has a score of that name. |
